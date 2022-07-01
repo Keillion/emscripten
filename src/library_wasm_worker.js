@@ -40,6 +40,7 @@ mergeInto(LibraryManager.library, {
   },
 
   // Executes a wasm function call received via a postMessage.
+  _wasm_worker_runPostMessage__deps: ['$getWasmTableEntry'],
   _wasm_worker_runPostMessage: function(e) {
     let data = e.data, wasmCall = data['_wsc']; // '_wsc' is short for 'wasm call', trying to use an identifier name that will never conflict with user code
     wasmCall && getWasmTableEntry(wasmCall)(...data['x']);

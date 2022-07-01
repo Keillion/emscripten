@@ -1161,7 +1161,7 @@ var LibraryEmbind = {
 #endif
   },
 
-  $embind__requireFunction__deps: ['$readLatin1String', '$throwBindingError'
+  $embind__requireFunction__deps: ['$readLatin1String', '$throwBindingError', '$getWasmTableEntry'
 #if DYNCALLS || !WASM_BIGINT || MEMORY64
     , '$getDynCaller'
 #endif

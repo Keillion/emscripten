@@ -948,7 +948,7 @@ var LibraryBrowser = {
     return 0;
   },
 
-  emscripten_set_main_loop__deps: ['$setMainLoop'],
+  emscripten_set_main_loop__deps: ['$setMainLoop', '$getWasmTableEntry'],
   emscripten_set_main_loop__sig: 'viii',
   emscripten_set_main_loop: function(func, fps, simulateInfiniteLoop) {
     var browserIterationFunc = {{{ makeDynCall('v', 'func') }}};
@@ -1163,7 +1163,7 @@ var LibraryBrowser = {
 
   // Runs natively in pthread, no __proxy needed.
   emscripten_async_call__sig: 'vppi',
-  emscripten_async_call__deps: ['$safeSetTimeout'],
+  emscripten_async_call__deps: ['$safeSetTimeout', '$getWasmTableEntry'],
   emscripten_async_call: function(func, arg, millis) {
     function wrapper() {
       {{{ makeDynCall('vp', 'func') }}}(arg);

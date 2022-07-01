@@ -957,7 +957,7 @@ var LibraryPThread = {
 #endif
   },
 
-  $invokeEntryPoint__deps: ['_emscripten_thread_exit'],
+  $invokeEntryPoint__deps: ['_emscripten_thread_exit', '$getWasmTableEntry'],
   $invokeEntryPoint: function(ptr, arg) {
 #if PTHREADS_DEBUG
     err('invokeEntryPoint: ' + ptrToString(ptr));

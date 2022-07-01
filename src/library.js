@@ -2249,6 +2249,7 @@ mergeInto(LibraryManager.library, {
   // Helper for raise() to avoid signature mismatch failures:
   // https://github.com/emscripten-core/posixtestsuite/issues/6
   __call_sighandler__sig: 'vpi',
+  __call_sighandler__deps: ['$getWasmTableEntry'],
   __call_sighandler: function(fp, sig) {
     {{{ makeDynCall('vi', 'fp') }}}(sig);
   },
@@ -3226,6 +3227,7 @@ mergeInto(LibraryManager.library, {
   },
 
   $dynCall__docs: '/** @param {Object=} args */',
+  $dynCall__deps: ['$getWasmTableEntry'],
   $dynCall: function(sig, ptr, args) {
 #if DYNCALLS
     return dynCallLegacy(sig, ptr, args);

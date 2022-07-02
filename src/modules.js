@@ -344,6 +344,23 @@ function isExportedByForceFilesystem(name) {
          name === 'removeRunDependency';
 }
 
+function addMissingLibraryStubs() {
+  if (!ASSERTIONS) return '';
+  let rtn = '';
+  const librarySymbolSet = new Set(librarySymbols);
+  for (const ident in LibraryManager.library) {
+    if (typeof LibraryManager.library[ident] === 'function') {
+      if (ident[0] === '$' && !isJsLibraryConfigIdentifier(ident) && !LibraryManager.library[ident + '__internal']) {
+        const name = ident.substr(1);
+        if (!librarySymbolSet.has(name)) {
+          rtn += `var ${name} = missingLibraryFunc('${name}');\n`;
+        }
+      }
+    }
+  }
+  return rtn;
+}
+
 // export parts of the JS runtime that the user asked for
 function exportRuntime() {
   const EXPORTED_RUNTIME_METHODS_SET = new Set(EXPORTED_RUNTIME_METHODS);
@@ -379,7 +396,6 @@ function exportRuntime() {
         return `unexportedRuntimeFunction('${name}', ${fssymbol});`;
       }
     }
-    return '';
   }
 
   function maybeExportNumber(name) {
@@ -516,12 +532,12 @@ function exportRuntime() {
     const runtimeNumbersSet = new Set(runtimeNumbers);
     for (const name of EXPORTED_RUNTIME_METHODS_SET) {
       if (!runtimeElementsSet.has(name) && !runtimeNumbersSet.has(name)) {
-        printErr(`warning: invalid item (maybe a typo?) in EXPORTED_RUNTIME_METHODS: ${name}`);
+        printErr(`warning: invalid item in EXPORTED_RUNTIME_METHODS: ${name}`);
       }
     }
   }
   let exports = runtimeElements.map((name) => maybeExport(name));
   exports = exports.concat(runtimeNumbers.map((name) => maybeExportNumber(name)));
-  exports = exports.filter((name) => name != '');
-  return exports.join('\n');
+  exports = exports.filter((name) => name);
+  return exports.join('\n') + '\n' + addMissingLibraryStubs();
 }
